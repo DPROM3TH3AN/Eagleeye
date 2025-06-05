@@ -1,9 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from backend.routers import chat, tracking, numbers
 import os
 import logging
+from fastapi.responses import HTMLResponse
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -13,7 +14,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 logging.debug(f"Base Directory: {BASE_DIR}")
 
 app = FastAPI(
-    title="Tracking System API",
+    title="Eagle Eye Tracking System",
     description="API for chat, device tracking (including IMEI), phone analysis, realtime updates, and NextBillion AI integration.",
     version="1.0.0"
 )
@@ -32,9 +33,46 @@ logging.debug(f"Templates Directory: {templates_dir}")
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 templates = Jinja2Templates(directory=templates_dir)
 
-@app.get("/")
-async def root():
-    return {"message": "Welcome to the Tracking System API"}
+@app.get("/", response_class=HTMLResponse)
+async def root(request: Request):
+    return templates.TemplateResponse(
+        "base.html",
+        {
+            "request": request,
+            "title": "Eagle Eye Dashboard"
+        }
+    )
+
+# Add routes for each main section
+@app.get("/chat", response_class=HTMLResponse)
+async def chat_page(request: Request):
+    return templates.TemplateResponse(
+        "base.html",
+        {
+            "request": request,
+            "title": "Chat System"
+        }
+    )
+
+@app.get("/tracking", response_class=HTMLResponse)
+async def tracking_page(request: Request):
+    return templates.TemplateResponse(
+        "base.html",
+        {
+            "request": request,
+            "title": "Tracking System"
+        }
+    )
+
+@app.get("/numbers", response_class=HTMLResponse)
+async def numbers_page(request: Request):
+    return templates.TemplateResponse(
+        "base.html",
+        {
+            "request": request,
+            "title": "Number Analysis"
+        }
+    )
 
 if __name__ == "__main__":
     import uvicorn
