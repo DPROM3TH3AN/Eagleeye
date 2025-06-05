@@ -2,7 +2,7 @@
 import requests
 import os
 
-TOMTOM_API_KEY = os.getenv('YOUR_TOMTOM_API_KEY')  # update with your TomTom key
+TOMTOM_API_KEY = os.getenv('TOMTOM_API_KEY')  # update with your TomTom key
 TOMTOM_BASE_URL = "https://api.tomtom.com/search/2/reverseGeocode/{lat},{lon}.json"
 
 def get_tracking_info(identifier: str, lat: float, lon: float):
